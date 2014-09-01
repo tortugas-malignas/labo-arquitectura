@@ -1,20 +1,19 @@
 all: run
 
-run: ff_nb_tb
-	ghdl -r ff_nb_tb --stop-time=50ns --vcd=ff_nb.vcd
+run: sl2_tb
+	make shiftl
+	make shift_tb
+	ghdl -r sl2_tb --stop-time=50ns --vcd=sl2.vcd
+	gtkwave sl2.vcd 
 
-ff_nb_tb: ff_nb ff_nb_tb.vhd
-	ghdl -a ff_nb_tb.vhd
-	ghdl -e ff_nb_tb	
+shift_tb: sl2_tb.vhdl
+	ghdl -a --ieee=synopsys -fexplicit sl2.vhdl sl2_tb.vhdl
+	ghdl -e --ieee=synopsys -fexplicit sl2_tb	
 
-ff_nb: ff_nb.vhd
-	ghdl -a ff_nb.vhd
-
-spawn: run
-	gtkwave ff_nb.vcd
+shiftl: sl2.vhdl
+	ghdl -a --ieee=synopsys -fexplicit sl2.vhdl
 
 clean: 
-	rm -rf ff_nb_tb
 	rm -rf *.o
 	rm -rf *.cf
 	rm -rf *.vcd
