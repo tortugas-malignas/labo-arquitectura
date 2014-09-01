@@ -1,0 +1,4 @@
+v 3
+file . "aludec.vhdl" "20140829141209.000" "20140829111215.349":
+  entity aludec at 1( 0) + 0 on 11;
+  architecture aludecoder_1 of aludec at 12( 213) + 0 on 12;

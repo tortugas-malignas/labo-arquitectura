@@ -1,0 +1,7 @@
+regfile: regfile.vhdl
+	ghdl -a --ieee=synopsys -fexplicit regfile.vhdl
+
+clean: 
+	rm -rf *.o
+	rm -rf *.cf
+	rm -rf *.vcd
