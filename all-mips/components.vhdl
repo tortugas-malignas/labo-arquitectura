@@ -20,7 +20,8 @@ use IEEE.STD_LOGIC_1164.all;
 
 package components is
     -- constantes:	
-	constant MIPS_SOFT_FILE: string := "//home//eduardo//docencia//virtual//mips.dat";
+	constant MIPS_SOFT_FILE: string := "//home//matias//Famaf//arquitectura-del-computador//practico1//all-mips//mips.dat";
+
 	constant MEMORY_DUMP_FILE: string := "mem.dump";
 
 component adder is -- adder

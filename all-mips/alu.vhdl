@@ -8,7 +8,7 @@ entity alu is
 port(
 	a, b : in std_logic_vector(31 downto 0);
 	alucontrol : in std_logic_vector(2 downto 0);
-	zero : out bit;
+	zero : out std_logic;
 	result : out std_logic_vector(31 downto 0) 
 );
 end entity;
