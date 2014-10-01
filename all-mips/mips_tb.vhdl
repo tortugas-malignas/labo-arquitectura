@@ -26,20 +26,20 @@ begin
     process
     begin
         clk_s <= '1';
-        wait for 10 ns;
+        wait for 100 ns;
         clk_s <= '0';
-        wait for 10 ns;
+        wait for 100 ns;
     end process;
 
     process
     begin
         dump_s <= '0';
         reset_s <= '1';
-        wait for 20 ns;
+        wait for 200 ns;
         reset_s <= '0';
-        wait for 170 ns;
+        wait for 1700 ns;
         dump_s <= '1';
-        wait for 40 ns;
+        wait for 300 ns;
     end process;
 
 end architecture;

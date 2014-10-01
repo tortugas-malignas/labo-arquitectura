@@ -94,11 +94,11 @@ signal instrPrima : std_logic_vector(31 downto 0);
 signal PCPlus4 : std_logic_vector(31 downto 0);
 signal Zero : std_logic;
 
-signal PCJump : std_logic_vector(31 downto 0) := PCPlus4(31 downto 28) and instrPrima(25 downto 0) and "00";
-signal PCSrc : std_logic := Branch and Zero;
+signal PCJump : std_logic_vector(31 downto 0);
+signal PCSrc : std_logic;
 signal PCNext : std_logic_vector(31 downto 0);
 signal PCSrc_signal0, PCBranch : std_logic_vector(31 downto 0);
-signal PCprima : std_logic_vector(31 downto 0);
+signal PCprima, PCprimaNext : std_logic_vector(31 downto 0);
 signal WriteReg : std_logic_vector(4 downto 0);
 signal Result : std_logic_vector(31 downto 0);
 signal SRCa, SrcB, WriteData : std_logic_vector(31 downto 0);
@@ -108,25 +108,33 @@ signal ShifterAdder : std_logic_vector(31 downto 0);
 signal AluResult : std_logic_vector(31 downto 0);
 signal ReadData : std_logic_vector(31 downto 0);
 begin
-	PCSrc_mux : mux2 port map(d0=> PCSrc_signal0, d1=> PCBranch, s=> PCSrc, y=> PCNext);
-	PCJump_mux : mux2 port map(d0=> PCNext, d1=> PCJump, s=> Jump, y=> PC);
-	PC_ff : flopr port map(d=>PCprima, clk=> clk, reset=> reset, q=>PCprima);
+    PCJump <= PCPlus4(31 downto 28) & instrPrima(25 downto 0) & "00";
+    PCSrc <= Branch and Zero;
+	PCSrc_mux : mux2 port map(d0=> PCPlus4, d1=> PCBranch, s=> PCSrc, y=> PCNext);
+	PCJump_mux : mux2 port map(d0=> PCNext, d1=> PCJump, s=> Jump, y=> PCprima);
+	PC_ff : flopr port map(d=>PCprima, clk=> clk, reset=> reset, q=>PCprimaNext);
 -- check!
-	Imem_instance : imem port map(a=> PCprima(5 downto 0), rd=>instr);
-	PCPlus_adder : adder port map(a=>PCprima, b=>X"00000004", y=> PCPlus4);
-	regfile_instance : regfile port map(clk=> clk , we3=> RegWrite , ra1=> instrPrima(25 downto 21), ra2=> instrPrima(20 downto 16), 
-		wa3=> WriteReg, wd3=> Result, rd1=> SRCa, rd2=> WriteData);
+	Imem_instance : imem port map(a=> PCprimaNext(5 downto 0), rd=>instrPrima);
+	PCPlus_adder : adder port map(a=>PCprimaNext, b=>X"00000001", y=> PCPlus4);
+	regfile_instance : regfile port map(clk=> clk,
+                                        we3=> RegWrite ,
+                                        ra1=> instrPrima(25 downto 21),
+                                        ra2=> instrPrima(20 downto 16), 
+                                        wa3=> WriteReg,
+                                        wd3=> Result,
+                                        rd1=> SRCa,
+                                        rd2=> WriteData);
 	signext_instan : signext port map(a=>instrPrima(15 downto 0), y=> SignImm);
 	writeReg_mux : mux2
 		generic map (NBITS => 5)
 		port map(d0=>instrPrima(20 downto 16), d1=>instrPrima(15 downto 11), s=>RegDst, y=> WriteReg);
 	AluIn : mux2 port map(d0=>WriteData, d1=> SignImm, y=> SrcB, s=>AluSrc);
 	Sl2_adder : sl2 port map(a=>SignImm, y=>ShifterAdder);
-	AdderBranch : adder port map(a=>ShifterAdder, b=>PCSrc_signal0, y=>PCBranch);
+	AdderBranch : adder port map(a=>ShifterAdder, b=>PCPlus4, y=>PCBranch);
 	AluInstance : alu port map(a=>SRCa, b=>SrcB, alucontrol=> AluControl, zero=> Zero, result=>AluResult);
 	MemoryData : dmem port map(clk=>clk, we=>MemWrite, a=>AluResult, wd=> WriteData, rd=> ReadData, dump=>dump);
 	MemDataMux : mux2 port map(d0=>AluResult, d1=>ReadData, s=>MemToReg, y=>Result);
-
-
+    pc <= PCprimaNext;
+    instr <= instrPrima;
 end architecture;
 

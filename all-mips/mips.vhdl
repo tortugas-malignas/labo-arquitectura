@@ -39,17 +39,17 @@ architecture behaviour of mips is
     );
     end component;
 begin
-
     dp: datapath port map(MemToReg => MemToReg_s, MemWrite => MemWrite_s,
                           Branch => Branch_s, AluSrc => AluSrc_s,
                           RegDst => RegDst_s, RegWrite => RegWrite_s,
                           Jump => Jump_s, AluControl => AluControl_s,
-                          instr => instr_s, pc => pc_s,clk => clk_s,
-                          reset => reset_s, dump => dump_s);
+                          instr => instr_s, pc => pc_s,clk => clk,
+                          reset => reset, dump => dump);
     control: controller port map(Op => instr_s(31 downto 26), Funct => instr_s(5 downto 0),
                                  MemToReg => MemToReg_s, MemWrite => MemWrite_s,
                                  Branch => Branch_s, AluSrc => AluSrc_s,
                                  RegDst => RegDst_s, RegWrite => RegWrite_s,
                                  Jump => Jump_s, AluControl => AluControl_s);
-    -- I'm tha boss!
+    pc <= pc_s;
+    instr <= instr_s;
 end behaviour;

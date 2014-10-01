@@ -74,14 +74,14 @@ begin
                 AluOp    <= "00";
             -- Estara bien seteado?? ._.
             when others =>
-                RegWrite <= 'X';
-                RegDst   <= 'X';
-                AluSrc   <= 'X';
-                Branch   <= 'X';
-                MemWrite <= 'X';
-                MemToReg <= 'X';
-                Jump     <= 'X';
-                AluOp    <= "XX"; 
+                RegWrite <= '-';
+                RegDst   <= '-';
+                AluSrc   <= '-';
+                Branch   <= '-';
+                MemWrite <= '-';
+                MemToReg <= '-';
+                Jump     <= '-';
+                AluOp    <= "--"; 
         end case;
     end process;
 end behaviour;

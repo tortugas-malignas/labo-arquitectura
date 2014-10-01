@@ -2,13 +2,13 @@ SRC= adder.vhdl aludec.vhdl alu.vhdl components.vhdl controller.vhdl datapath.vh
 	dmem.vhdl flopr.vhdl imem.vhdl maindec.vhdl mips.vhdl mux2.vhdl regfile.vhdl signext.vhdl sl2.vhdl 
 OBJECTS=$(SRC:.vhdl=.o)
 
+all: $(SRC)
+	ghdl -a --ieee=synopsys -fexplicit $(SRC) mips_tb.vhdl
+	ghdl -e --ieee=synopsys -fexplicit mips_tb 
 
-all: all_mips_tb
-	ghdl -r all_mips_tb --vcd=all_mips_tb.vcd --stop-time=250ns
 
-all_mips_tb: $(SRC)
-	ghdl -a --ieee=synopsys -fexplicit $(SRC) all_mips_tb.vhdl
-	ghdl -e --ieee=synopsys -fexplicit all_mips_tb 
+vcd: all
+	ghdl -r mips_tb --vcd=mips_tb.vcd --stop-time=2200ns
 
 %.o: %.vhdl
 	ghdl -a --ieee=synopsys -fexplicit $<
@@ -16,3 +16,5 @@ all_mips_tb: $(SRC)
 clean:
 	rm -f *.o
 	rm -f *.cf
+	rm -f *.vcd
+	rm -f mips_tb
