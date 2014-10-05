@@ -13,7 +13,6 @@ port(
 );
 end entity;
 architecture fileregister_1 of regfile is
-signal reg_out1, reg_out2 : std_logic_vector(31 downto 0);
 begin
 	process(clk)
 		-- memoria : matriz 32x1, donde cada elemento contiene 32 bits
@@ -33,17 +32,16 @@ begin
 					index_mem1 := conv_integer(ra1);
 					index_mem2 := conv_integer(ra2);
 
-					rd1 <= mem_reg(index_mem1);
-					rd2 <= mem_reg(index_mem2);
-					assert false report integer'image(index_mem1) severity note;
-					if(index_mem1= 0) then
+					if(index_mem1=0) then
 						rd1 <= (others=>'0');
-					elsif(index_mem2= 0) then
+                    else
+                        rd1 <= mem_reg(index_mem1);
+                    end if;
+					if(index_mem2=0) then
 						rd2 <= (others=>'0');
+                    else
+                        rd2 <= mem_reg(index_mem2);
 					end if;
-
-					--rd1 <= reg_out1;
-					--rd2 <= reg_out2;
 				end if;
 			end if;
 

@@ -13,9 +13,6 @@ port(
 );
 end entity;
 architecture alu_1 of alu is
-SIGNAL reg1, reg2: 	UNSIGNED(a'range);
-SIGNAL result_buf:	std_logic_vector(31 downto 0);
-
 	function slt(
 		fvalue : std_logic_vector(31 downto 0);
 		svalue : std_logic_vector(31 downto 0)
@@ -27,31 +24,34 @@ SIGNAL result_buf:	std_logic_vector(31 downto 0);
 		else 
 			output := (others=>'0');
 		end if;
-	return output;
+
+        return output;
 	end slt;
 
+    signal alucontrol_s: std_logic_vector(2 downto 0);
+    signal result_s: std_logic_vector(31 downto 0);
 begin
-PROCESS (a, b, alucontrol)
+    PROCESS (a, b, alucontrol)
        BEGIN 
 		
          CASE alucontrol IS
-	   	 	WHEN "000" => result_buf <= a and b;
-           	WHEN "001" => result_buf <= a or b;
-           	WHEN "010" => result_buf <= a + b;
-           -- WHEN "011" => result <= null;
-			WHEN "100" => result_buf <= a and (not b);
-			WHEN "101" => result_buf <= a or (not b);
-			WHEN "110" => result_buf <= a - b;
-			WHEN "111" => result_buf <= slt(a,b); 
+	   	 	WHEN "000" => result_s <= a and b;
+           	WHEN "001" => result_s <= a or b;
+           	WHEN "010" => result_s <= a + b;
+           -- WHEN "011" => result <= nl;
+			WHEN "100" => result_s <= a and (not b);
+			WHEN "101" => result_s <= a or (not b);
+			WHEN "110" => result_s <= a - b;
+			WHEN "111" => result_s <= slt(a,b); 
            WHEN OTHERS => null;
          END CASE;
-		IF (result_buf=(X"00000000")) THEN
+		IF (result_s=(X"00000000")) THEN
 			zero <= '1';
 		ELSE 
 			zero <= '0';
 		END IF;
-		result <= result_buf;
 
-END PROCESS;
+    END PROCESS;
+    result <= result_s;
  
 end architecture;

@@ -28,7 +28,7 @@ begin
 					WHEN OTHERS => null;
 				END CASE;
 			end if;
-			alucontrol <= control;
 	end process;
+    alucontrol <= control;
 	
 end architecture;

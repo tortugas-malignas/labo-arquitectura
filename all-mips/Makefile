@@ -8,7 +8,7 @@ all: $(SRC)
 
 
 vcd: all
-	ghdl -r mips_tb --vcd=mips_tb.vcd --stop-time=2200ns
+	ghdl -r mips_tb --vcd=mips_tb.vcd --stop-time=3000ns
 
 %.o: %.vhdl
 	ghdl -a --ieee=synopsys -fexplicit $<
