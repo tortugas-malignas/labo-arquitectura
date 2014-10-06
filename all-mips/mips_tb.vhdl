@@ -37,7 +37,7 @@ begin
         reset_s <= '1';
         wait for 200 ns;
         reset_s <= '0';
-        wait for 1700 ns;
+        wait for 1900 ns;
         dump_s <= '1';
         wait for 300 ns;
     end process;
