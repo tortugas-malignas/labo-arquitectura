@@ -30,20 +30,22 @@ begin
 					mem_reg(index_i):= wd3;
 					assert false report integer'image(index_i) severity note;
 				else -- leemos los datos de los registros ra1 ra2
-					index_mem1 := conv_integer(ra1);
-					index_mem2 := conv_integer(ra2);
-
-					rd1 <= mem_reg(index_mem1);
-					rd2 <= mem_reg(index_mem2);
-					assert false report integer'image(index_mem1) severity note;
-					if(index_mem1= 0) then
+                    if(ra1=X"00000000") then
+                        index_mem1 := 0;
 						rd1 <= (others=>'0');
-					elsif(index_mem2= 0) then
-						rd2 <= (others=>'0');
-					end if;
+                    else
+                        index_mem1 := conv_integer(ra1);
+                        rd1 <= mem_reg(index_mem1);
+                    end if;
 
-					--rd1 <= reg_out1;
-					--rd2 <= reg_out2;
+                    if(ra2=X"00000000") then
+                        index_mem2 := 0;
+						rd2 <= (others=>'0');
+                    else
+                        index_mem2 := conv_integer(ra2);
+                        rd2 <= mem_reg(index_mem2);
+                    end if;
+
 				end if;
 			end if;
 
